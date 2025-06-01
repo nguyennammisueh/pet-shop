@@ -59,8 +59,8 @@
     <div
       class="w-container mb-3 mx-auto p-3 rounded flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
     >
-      <h2 class="mx-1 text-zinc-700 text-xl">Danh sách sản phẩm</h2>
-      <button class="btn mx-1 custom-btn" @click="openCreatePopup">+ Thêm sản phẩm</button>
+      <h2 class="mx-1 text-zinc-700 text-xl">Danh sách mã khuyến mãi</h2>
+      <button class="btn mx-1 custom-btn" @click="openCreatePopup">+ Thêm mã khuyến mãi</button>
     </div>
 
     <!-- Thanh Search -->
@@ -123,61 +123,20 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     >
       <div class="bg-white rounded p-6 w-[420px] max-w-full">
-        <h3 class="text-lg font-semibold mb-4 text-center">Thông tin sản phẩm</h3>
+        <h3 class="text-lg font-semibold mb-2 text-center">Thông tin mã khuyến mãi</h3>
         <form @submit.prevent="saveEdit">
-          <div class="mb-1">
-            <label class="block mb-1 font-medium text-sm">Tên sản phẩm</label>
+          <div class="mb-2">
+            <label class="block font-medium text-sm">Mã khuyến mãi</label>
             <input
-              v-model="editingProduct.product_name"
+              v-model="editingProduct.code"
               type="text"
               class="w-full border border-gray-300 rounded text-sm"
               required
             />
           </div>
 
-          <div class="mb-3">
-            <label class="block mb-1 font-medium text-sm">Giá gốc</label>
-            <input
-              v-model.number="editingProduct.total_voucher"
-              type="number"
-              min="0"
-              class="w-full border border-gray-300 rounded p-1 text-sm"
-              required
-            />
-          </div>
-
-          <div class="mb-3">
-            <label class="block mb-1 font-medium text-sm">Giá tiền</label>
-            <input
-              v-model.number="editingProduct.used_voucher"
-              type="number"
-              min="0"
-              class="w-full border border-gray-300 rounded p-1 text-sm"
-              required
-            />
-          </div>
-
-          <div class="mb-3">
-            <label class="block mb-1 font-medium text-sm">Loại thú cưng</label>
-            <input
-              v-model="editingProduct.pet_type"
-              type="text"
-              class="w-full border border-gray-300 rounded p-1 text-sm"
-            />
-          </div>
-
-          <div class="mb-3">
-            <label class="block mb-1 font-medium text-sm">Hàng tồn kho</label>
-            <input
-              v-model.number="editingProduct.stock"
-              type="number"
-              min="0"
-              class="w-full border border-gray-300 rounded p-1 text-sm"
-            />
-          </div>
-
-          <div class="mb-3">
-            <label class="block mb-1 font-medium text-sm">Mô tả sản phẩm</label>
+          <div class="mb-2">
+            <label class="block mb-1 font-medium text-sm">Mô tả khuyến mãi</label>
             <textarea
               v-model="editingProduct.description"
               rows="3"
@@ -185,14 +144,60 @@
             ></textarea>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-2">
+            <label class="block mb-1 font-medium text-sm">% giảm giá</label>
+            <input
+              v-model.number="editingProduct.discount_percent"
+              type="number"
+              min="0"
+              class="w-full border border-gray-300 rounded p-1 text-sm"
+              required
+            />
+          </div>
+
+          <div class="mb-2">
+            <label class="block mb-1 font-medium text-sm">Số lượng</label>
+            <input
+              v-model="editingProduct.total_voucher"
+              type="text"
+              class="w-full border border-gray-300 rounded p-1 text-sm"
+            />
+          </div>
+
+          <div class="mb-2">
+            <label class="block mb-1 font-medium text-sm">Đã sử dụng</label>
+            <input
+              v-model="editingProduct.used_voucher"
+              type="text"
+              class="w-full border border-gray-300 rounded p-1 text-sm"
+            />
+          </div>
+          <div class="mb-2">
+            <label class="block mb-1 font-medium text-sm">Ngày bắt đầu</label>
+            <input
+              v-model="editingProduct.start_date"
+              type="date"
+              class="w-full border border-gray-300 rounded p-1 text-sm"
+            />
+          </div>
+
+          <div class="mb-2">
+            <label class="block mb-1 font-medium text-sm">Ngày kết thúc</label>
+            <input
+              v-model="editingProduct.end_date"
+              type="date"
+              class="w-full border border-gray-300 rounded p-1 text-sm"
+            />
+          </div>
+
+          <div class="mb-2">
             <label class="block mb-1 font-medium text-sm">Trạng thái hoạt động</label>
             <div class="flex items-center gap-4">
               <label class="inline-flex items-center text-sm">
                 <input
                   type="radio"
-                  value="true"
-                  v-model="editingProduct.isActive"
+                  value="1"
+                  v-model="editingProduct.is_active"
                   class="form-radio"
                 />
                 <span class="ml-2 select-none">Có</span>
@@ -200,8 +205,8 @@
               <label class="inline-flex items-center text-sm">
                 <input
                   type="radio"
-                  value="false"
-                  v-model="editingProduct.isActive"
+                  value="0"
+                  v-model="editingProduct.is_active"
                   class="form-radio"
                 />
                 <span class="ml-2 select-none">Không</span>
@@ -233,61 +238,20 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     >
       <div class="bg-white rounded p-6 w-[420px] max-w-full">
-        <h3 class="text-lg font-semibold mb-4 text-center">Thêm sản phẩm mới</h3>
+        <h3 class="text-lg font-semibold mb-4 text-center">Thêm mã khuyến mãi mới</h3>
         <form @submit.prevent="createProduct">
-          <div class="mb-1">
-            <label class="block mb-1 font-medium text-sm">Tên sản phẩm</label>
+          <div class="mb-2">
+            <label class="block mb-1 font-medium text-sm">Mã khuyến mãi</label>
             <input
-              v-model="creatingProduct.product_name"
+              v-model="creatingProduct.code"
               type="text"
               class="w-full border border-gray-300 rounded text-sm"
               required
             />
           </div>
 
-          <div class="mb-3">
-            <label class="block mb-1 font-medium text-sm">Giá gốc</label>
-            <input
-              v-model.number="creatingProduct.total_voucher"
-              type="number"
-              min="0"
-              class="w-full border border-gray-300 rounded p-1 text-sm"
-              required
-            />
-          </div>
-
-          <div class="mb-3">
-            <label class="block mb-1 font-medium text-sm">Giá tiền</label>
-            <input
-              v-model.number="creatingProduct.used_voucher"
-              type="number"
-              min="0"
-              class="w-full border border-gray-300 rounded p-1 text-sm"
-              required
-            />
-          </div>
-
-          <div class="mb-3">
-            <label class="block mb-1 font-medium text-sm">Loại thú cưng</label>
-            <input
-              v-model="creatingProduct.pet_type"
-              type="text"
-              class="w-full border border-gray-300 rounded p-1 text-sm"
-            />
-          </div>
-
-          <div class="mb-3">
-            <label class="block mb-1 font-medium text-sm">Hàng tồn kho</label>
-            <input
-              v-model.number="creatingProduct.stock"
-              type="number"
-              min="0"
-              class="w-full border border-gray-300 rounded p-1 text-sm"
-            />
-          </div>
-
-          <div class="mb-3">
-            <label class="block mb-1 font-medium text-sm">Mô tả sản phẩm</label>
+          <div class="mb-2">
+            <label class="block mb-1 font-medium text-sm">Mô tả khuyến mãi</label>
             <textarea
               v-model="creatingProduct.description"
               rows="3"
@@ -295,14 +259,61 @@
             ></textarea>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-2">
+            <label class="block mb-1 font-medium text-sm">% giảm giá</label>
+            <input
+              v-model.number="creatingProduct.discount_percent"
+              type="number"
+              min="0"
+              class="w-full border border-gray-300 rounded p-1 text-sm"
+              required
+            />
+          </div>
+
+          <div class="mb-2">
+            <label class="block mb-1 font-medium text-sm">Số lượng</label>
+            <input
+              v-model="creatingProduct.total_voucher"
+              type="text"
+              class="w-full border border-gray-300 rounded p-1 text-sm"
+            />
+          </div>
+
+          <div class="mb-2">
+            <label class="block mb-1 font-medium text-sm">Đã sử dụng</label>
+            <input
+              v-model="creatingProduct.used_voucher"
+              type="text"
+              class="w-full border border-gray-300 rounded p-1 text-sm"
+            />
+          </div>
+
+          <div class="mb-2">
+            <label class="block mb-1 font-medium text-sm">Ngày bắt đầu</label>
+            <input
+              v-model="creatingProduct.start_date"
+              type="date"
+              class="w-full border border-gray-300 rounded p-1 text-sm"
+            />
+          </div>
+
+          <div class="mb-2">
+            <label class="block mb-1 font-medium text-sm">Ngày kết thúc</label>
+            <input
+              v-model="creatingProduct.end_date"
+              type="date"
+              class="w-full border border-gray-300 rounded p-1 text-sm"
+            />
+          </div>
+
+          <div class="mb-2">
             <label class="block mb-1 font-medium text-sm">Trạng thái hoạt động</label>
             <div class="flex items-center gap-4">
               <label class="inline-flex items-center text-sm">
                 <input
                   type="radio"
-                  value="true"
-                  v-model="creatingProduct.isActive"
+                  value="1"
+                  v-model="creatingProduct.is_active"
                   class="form-radio"
                 />
                 <span class="ml-2 select-none">Có</span>
@@ -310,8 +321,8 @@
               <label class="inline-flex items-center text-sm">
                 <input
                   type="radio"
-                  value="false"
-                  v-model="creatingProduct.isActive"
+                  value="0"
+                  v-model="creatingProduct.is_active"
                   class="form-radio"
                 />
                 <span class="ml-2 select-none">Không</span>
@@ -355,17 +366,7 @@ export default {
     }
   },
   async mounted() {
-    this.loading = true
-    try {
-      const res = await fetch('http://localhost:8000/api/v1/promotions')
-      if (!res.ok) throw new Error('Failed to fetch products')
-      this.products = await res.json()
-    } catch (err) {
-      this.error = err.message
-      console.error(err)
-    } finally {
-      this.loading = false
-    }
+    this.fetchProducts()
   },
   computed: {
     filteredAndSortedProducts() {
@@ -394,6 +395,25 @@ export default {
     }
   },
   methods: {
+    getCookie(name) {
+      const value = `; ${document.cookie}`
+      const parts = value.split(`; ${name}=`)
+      if (parts.length === 2) return parts.pop().split(';').shift()
+      return null
+    },
+    async fetchProducts() {
+      this.loading = true
+      try {
+        const res = await fetch('http://localhost:8000/api/v1/promotions')
+        if (!res.ok) throw new Error('Failed to fetch products')
+        this.products = await res.json()
+      } catch (err) {
+        this.error = err.message
+        console.error(err)
+      } finally {
+        this.loading = false
+      }
+    },
     formatCurrency(value) {
       if (typeof value === 'number') {
         return value.toLocaleString('vi-VN') + 'đ'
@@ -417,17 +437,19 @@ export default {
     },
     async saveEdit() {
       if (!this.editingProduct) return
-
-      // Chuyển is_active thành số
       this.editingProduct.is_active = this.editingProduct.is_active ? 1 : 0
 
       try {
         this.loading = true
+        const token = this.getCookie('token')
         const res = await fetch(
-          `http://localhost:8000/api/v1/promotions/${this.editingProduct.product_id}`,
+          `http://localhost:8000/api/v1/promotions/${this.editingProduct.promotion_id}`,
           {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
             body: JSON.stringify(this.editingProduct)
           }
         )
@@ -435,16 +457,23 @@ export default {
 
         const updatedProduct = await res.json()
 
-        const index = this.products.findIndex(p => p.product_id === updatedProduct.product_id)
+        const index = this.products.findIndex(p => p.promotion_id === updatedProduct.promotion_id)
         if (index !== -1) {
           this.$set(this.products, index, updatedProduct)
         }
 
         this.editingProduct = null
+        this.fetchProducts()
       } catch (error) {
         alert(error.message)
       } finally {
         this.loading = false
+      }
+    },
+
+    deleteProduct() {
+      if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
+        alert('BE todo')
       }
     },
     openCreatePopup() {
@@ -453,40 +482,69 @@ export default {
         : 1
       this.creatingProduct = {
         promotion_id: newId,
-        product_name: '',
-        total_voucher: 0,
-        price: 0,
-        pet_type: '',
-        stock: 0,
+        code: '',
         description: '',
-        isActive: 'true'
+        discount_percent: 0,
+        total_voucher: '',
+        used_voucher: 0,
+        start_date: '',
+        end_date: '',
+        is_active: 1
       }
     },
     closeCreatePopup() {
       this.creatingProduct = null
     },
-    createProduct() {
-      this.products.push({ ...this.creatingProduct })
-      this.closeCreatePopup()
-    },
-    deleteProduct() {
-      if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
-        //xem hàm mẫu
-        //  async deleteProduct(promotion_id) {
-        //   if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
-        //     try {
-        //       const res = await fetch(`/api/products/${promotion_id}`, {
-        //         method: 'DELETE',
-        //       })
-        //       if (!res.ok) throw new Error('Xóa thất bại')
-        //       // ✅ Gọi lại fetch sau khi xoá
-        //       await this.fetchProducts()
-        //     } catch (err) {
-        //       console.error('Lỗi khi xóa sản phẩm:', err)
-        //       alert('Không thể xóa sản phẩm. Vui lòng thử lại.')
-        //     }
-        //   }
-        // },
+    async createProduct() {
+      try {
+        this.loading = true
+        const token = this.getCookie('token')
+        const res = await fetch('http://localhost:8000/api/v1/promotions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(this.creatingProduct)
+        })
+        const contentType = res.headers.get('content-type') || ''
+
+        if (!res.ok) {
+          const errorText = await res.text()
+          throw new Error(`Lỗi khi tạo sản phẩm: ${errorText}`)
+        }
+
+        if (!contentType.includes('application/json')) {
+          const text = await res.text()
+          throw new Error(`Phản hồi không phải JSON: ${text}`)
+        }
+
+        const data = await res.json()
+
+        const newProduct = data.success
+
+        this.products.push(newProduct)
+
+        // Reset form tạo mới
+        this.creatingProduct = {
+          promotion_id: '',
+          code: '',
+          description: '',
+          discount_percent: '',
+          total_voucher: '',
+          used_voucher: '',
+          start_date: '',
+          end_date: '',
+          is_active: 0
+        }
+
+        this.closeCreatePopup()
+        this.fetchProducts()
+      } catch (error) {
+        alert(error.message)
+        console.error(error)
+      } finally {
+        this.loading = false
       }
     }
   }

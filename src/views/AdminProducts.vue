@@ -236,7 +236,6 @@
           <div class="mb-1">
             <label class="block mb-1 font-medium text-sm">Tên sản phẩm</label>
             <input
-
               v-model="creatingProduct.product_name"
               type="text"
               class="w-full border border-gray-300 rounded text-sm"
@@ -324,7 +323,7 @@
               <label class="inline-flex items-center text-sm">
                 <input
                   type="radio"
-                  value="true"
+                  value="1"
                   v-model="creatingProduct.is_active"
                   class="form-radio"
                 />
@@ -333,7 +332,7 @@
               <label class="inline-flex items-center text-sm">
                 <input
                   type="radio"
-                  value="false"
+                  value="0"
                   v-model="creatingProduct.is_active"
                   class="form-radio"
                 />
@@ -341,7 +340,7 @@
               </label>
             </div>
           </div>
-          
+
           <div class="flex justify-end gap-3 mb-3">
             <button
               type="button"
@@ -366,7 +365,7 @@
         :disabled="currentPage === 1"
         @click="currentPage--"
       >
-        Trước
+        <i class="fa-solid fa-chevron-left"></i>
       </button>
 
       <button
@@ -384,7 +383,7 @@
         :disabled="currentPage === totalPages"
         @click="currentPage++"
       >
-        Sau
+        <i class="fa-solid fa-chevron-right"></i>
       </button>
     </div>
   </div>
@@ -404,7 +403,7 @@ export default {
       error: null,
       creatingProduct: null,
       currentPage: 1,
-      pageSize: 3
+      pageSize: 8
     }
   },
   async mounted() {
@@ -446,6 +445,12 @@ export default {
     }
   },
   methods: {
+    getCookie(name) {
+      const value = `; ${document.cookie}`
+      const parts = value.split(`; ${name}=`)
+      if (parts.length === 2) return parts.pop().split(';').shift()
+      return null
+    },
     async fetchProducts() {
       this.loading = true
       try {
@@ -463,7 +468,7 @@ export default {
       if (typeof value === 'number') {
         return value.toLocaleString('vi-VN') + 'đ'
       }
-      return value
+      return String(value) + ' ' + 'đ'
     },
     sortBy(column) {
       if (this.currentSort === column) {
@@ -486,15 +491,22 @@ export default {
 
       try {
         this.loading = true
+        const token = this.getCookie('token')
         const res = await fetch(
           `http://localhost:8000/api/v1/products/${this.editingProduct.product_id}`,
           {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
             body: JSON.stringify(this.editingProduct)
           }
         )
-        if (!res.ok) throw new Error('Lỗi cập nhật')
+        if (!res.ok) {
+          const errorText = await res.text()
+          throw new Error(`Lỗi khi tạo sản phẩm: ${errorText}`)
+        }
 
         const updatedProduct = await res.json()
         await this.fetchProducts()
@@ -531,18 +543,20 @@ export default {
     async createProduct() {
       try {
         this.loading = true
+        const token = this.getCookie('token')
         const res = await fetch('http://localhost:8000/api/v1/products', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
           body: JSON.stringify(this.creatingProduct)
         })
         const contentType = res.headers.get('content-type') || ''
 
         if (!res.ok) {
-          // Nếu server trả lỗi, lấy nội dung lỗi dạng text để hiển thị
           const errorText = await res.text()
-          const text = await res.text()
-          console.log('respone text', text)
+          console.log('response text', errorText)
           throw new Error(`Lỗi khi tạo sản phẩm: ${errorText}`)
         }
 
@@ -601,14 +615,12 @@ export default {
     handleImageUpload(event) {
       const file = event.target.files[0]
       if (file) {
-        // Optional: Hiển thị ảnh trước khi upload
         const reader = new FileReader()
         reader.onload = e => {
-          this.creatingProduct.image_url = e.target.result // base64 preview
+          this.creatingProduct.image_url = e.target.result
         }
         reader.readAsDataURL(file)
 
-        // Nếu bạn cần gửi file này lên server:
         this.creatingProduct.image_file = file
       }
     },
